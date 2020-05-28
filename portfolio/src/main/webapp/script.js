@@ -20,7 +20,7 @@ function addRandomFact() {
       ['I\'m a middle child!', 'I\'m a cat person!', 'One time I flushed a pair of sunglasses down a toilet:(',
         'I can play the ukulele!'];
 
-  // Pick a random greeting.
+  // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
 
   // Add it to the page.
