@@ -1,9 +1,16 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 50%;
 }
 
-#greeting-container {
+#fact-container {
   margin-top: 20px;
+}
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
 }

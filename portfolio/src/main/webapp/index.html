@@ -2,17 +2,52 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>My Portfolio</title>
+    <title>Kaye's Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
   <body>
     <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
+      <h1>Kaye's Portfolio</h1>
+      <p>Hey there! I'm Kaye and I love going to concerts, discovering new music, baking, and coding!</p>
+      <img src="/images/strokes_concert.jpg">
+      <p>I was born and raised in Markham, ON, a city just outside of Toronto.</p>
+      <p>I currently attend the University of Toronto and study Industrial Engineering. I'm also planning
+          on pursuing a minor in Artificial Intelligence. So far I've really enjoyed my programming
+          and operations research courses and I'm interested in learning about ways that AI can be applied to
+          operations research!</p>
+      <p>At school I've volunteered as an instructor with Project Include, providing free coding bootcamps
+          to underprivileged school-aged kids around Toronto. Additionally I've had a hand in planning the
+          Engineering Faculty's Orientation Week, being responsible for Registration and Downtown
+          Walkaround (a 1000+ person parade around Downtown Toronto).</p>
+      <p>Click here to get a random fact about me:</p>
+      <button onclick="addRandomFact()">Hello</button>
+      <div id="fact-container"></div>
+      <h2>Projects</h2>
+      <ul>
+        <li>Information Retrieval Search Engine</li>
+          <ul>
+            <li>Built an information retrieval system using a HashMap-based inverted index and the TF-IDF
+                scoring rule</li>
+          </ul>
+        <li>Gradient-based Polynomial Minimizer</li>
+          <ul>
+            <li>Implemented a steepest descent algorithm to find the local minima of multivariable
+                polynomials</li>
+          </ul>
+        <li>Weighted Set Cover Problem Solver</li>
+          <ul>
+            <li>Implemented three greedy algorithms to solve the weighted set cover problem</li>
+          </ul>
+        <li>Vector and Matrix Computation Package</li>
+          <ul>
+            <li>Created a linear algebra package that allowed for vector and matrix computations such as
+                multiplication and transpositions</li>
+          </ul>
+      </ul>
+      <h2>Contact</h2>
+      <p>Find me on <a href = "https://www.linkedin.com/in/kayefung/" target = "_blank">
+        LinkedIn</a> or <a href = "https://github.com/kayefung" target = "_blank">Github</a></p>
     </div>
   </body>
 </html>
