@@ -13,6 +13,25 @@
 // limitations under the License.
 
 /**
+ * Randomly selects a background color when page refreshes and adjusts
+ * text color accordingly, for visibility.
+ */
+const setPageColors = () => {
+  const bgColors = ['#1A535C', '#4ECDC4', '#F7FFF7', '#A82431', '#FFE66D'];
+  const fgColors = ['#FFFFFF', '#000000', '#000000', '#FFFFFF', '#000000'];
+
+  // Pick a random pair of background and text colors.
+  const colorPair = Math.floor(Math.random() * bgColors.length);
+  
+  // Change the background color of page to bgColor.
+  document.body.style.backgroundColor = bgColors[colorPair];
+
+  // Change text color corresponding to background color.
+  document.body.style.color = fgColors[colorPair];
+};
+window.onload = setPageColors; 
+
+/**
  * Adds a random fact to the page.
  */
 function addRandomFact() {
@@ -27,3 +46,4 @@ function addRandomFact() {
   const factContainer = document.getElementById('fact-container');
   factContainer.innerText = fact;
 }
+
