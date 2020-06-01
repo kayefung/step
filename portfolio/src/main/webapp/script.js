@@ -47,6 +47,9 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
+/**
+ * Fetches message from server and adds it to DOM
+ */
 function getMessage() {
   fetch('/data').then(response => response.text()).then((message) => {
     document.getElementById('message-container').innerHTML = message;
