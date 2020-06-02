@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 
@@ -26,15 +27,9 @@ import com.google.gson.Gson;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-  private ArrayList<String> comments;
-
-  @Override
-  public void init() {
-    comments = new ArrayList<>();
-    comments.add("Hi there!");
-    comments.add("Have a good day!");
-    comments.add("I can\'t think of any more messages to write");
-  }
+  private static ArrayList<String> comments = new ArrayList<>
+      (Arrays.asList("Hi there!", "Have a good day!", 
+      "I can't think of any more messages to write"));
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

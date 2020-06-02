@@ -36,8 +36,9 @@ window.onload = setPageColors;
  */
 function addRandomFact() {
   const facts =
-      ['I\'m a middle child!', 'I\'m a cat person!', 'One time I flushed a pair of sunglasses down a toilet:(',
-        'I can play the ukulele!'];
+      ['I\'m a middle child!', 'I\'m a cat person!', 
+      'One time I flushed a pair of sunglasses down a toilet:(', 
+      'I can play the ukulele!'];
 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
@@ -53,11 +54,5 @@ function addRandomFact() {
 fetch('/data')
 .then(response => response.json())
 .then((message) => {
-  console.log(message[0]);
-  console.log(message[1]);
-  console.log(message[2]);
-
-  // Would replace with a for loop if there were more comments to display
-  document.getElementById('message-container').innerText = 
-    message[0] + "\n" + message[1] + "\n" + message[2];
+  document.getElementById('message-container').innerText = message.join('\n');
 });
