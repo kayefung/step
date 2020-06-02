@@ -36,8 +36,9 @@ window.onload = setPageColors;
  */
 function addRandomFact() {
   const facts =
-      ['I\'m a middle child!', 'I\'m a cat person!', 'One time I flushed a pair of sunglasses down a toilet:(',
-        'I can play the ukulele!'];
+      ['I\'m a middle child!', 'I\'m a cat person!', 
+      'One time I flushed a pair of sunglasses down a toilet:(', 
+      'I can play the ukulele!'];
 
   // Pick a random fact.
   const fact = facts[Math.floor(Math.random() * facts.length)];
@@ -50,12 +51,8 @@ function addRandomFact() {
 /**
  * Fetches message from server and adds it to DOM
  */
-function getMessage() {
-  fetch('/data')
-  .then(response => response.text())
-  .then((message) => {
-    // innerHTML is safe in this case because message comes from a static 
-    // String in the server. 
-    document.getElementById('message-container').innerHTML = message;
-  });
-}
+fetch('/data')
+.then(response => response.json())
+.then((message) => {
+  document.getElementById('message-container').innerText = message.join('\n');
+});
