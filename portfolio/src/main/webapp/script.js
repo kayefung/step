@@ -50,12 +50,14 @@ function addRandomFact() {
 /**
  * Fetches message from server and adds it to DOM
  */
-function getMessage() {
-  fetch('/data')
-  .then(response => response.text())
-  .then((message) => {
-    // innerHTML is safe in this case because message comes from a static 
-    // String in the server. 
-    document.getElementById('message-container').innerHTML = message;
-  });
-}
+fetch('/data')
+.then(response => response.json())
+.then((message) => {
+  console.log(message[0]);
+  console.log(message[1]);
+  console.log(message[2]);
+
+  // Would replace with a for loop if there were more comments to display
+  document.getElementById('message-container').innerText = 
+    message[0] + "\n" + message[1] + "\n" + message[2];
+});

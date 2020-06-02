@@ -10,7 +10,7 @@ h2 {
   font-size: 2em;
 }
 
-p, li, button, #fact-container {
+p, li, button, #fact-container, #message-container {
   font-size: 1.25em;
 }
 
@@ -46,14 +46,6 @@ a:hover, a:active {
 
 #fact-container {
   margin-top: 20px;
-}
-
-#message-button, #message-container {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
-  font-size: 0.75em;
 }
 
 img {
