@@ -49,10 +49,10 @@ function addRandomFact() {
 }
 
 /**
- * Fetches message from server and adds it to DOM
+ * Fetches messages from server and adds it to DOM
  */
 fetch('/data')
 .then(response => response.json())
-.then((message) => {
-  document.getElementById('message-container').innerText = message.join('\n');
+.then((messages) => {
+  document.getElementById('message-container').innerText = messages.join('\n');
 });
