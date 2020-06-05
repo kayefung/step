@@ -52,7 +52,15 @@ function addRandomFact() {
  * Fetches messages from server and adds it to DOM
  */
 function getComments() {
-  fetch('/data') 
+  // current problem -> doesn't load any comments when you initially open pg
+  // because next line is null -> doesn't have a value
+  // selected="selected" doesn't work??
+  var index = document.getElementById('max-comments').selectedIndex;
+  var maxComments = document.getElementsByTagName('option')[index].value;
+
+  var url = '/data?max-comments=' + maxComments.toString();
+
+  fetch(url) 
   .then(response => response.json())
   .then((messages) => {
     document.getElementById('message-container').innerText = messages.join('\n');
