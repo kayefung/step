@@ -27,23 +27,20 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    //int maxComments = 10;
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
-    //FetchOptions fetchOptions = FetchOptions.Builder.withLimit(maxComments);
 
     ArrayList<String> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable(/*fetchOptions*/)) {
+    for (Entity entity : results.asIterable()) {
       String commentText = (String) entity.getProperty("text");
 
       comments.add(commentText);

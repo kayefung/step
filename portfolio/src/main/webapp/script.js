@@ -48,16 +48,11 @@ function addRandomFact() {
   factContainer.innerText = fact;
 }
 
-function deleteComments() {
-  fetch('/delete-data')
-  .then(response => getComments)
-}
-
 /**
  * Fetches messages from server and adds it to DOM
  */
 function getComments() {
-  fetch('/data')
+  fetch('/data') 
   .then(response => response.json())
   .then((messages) => {
     document.getElementById('message-container').innerText = messages.join('\n');
