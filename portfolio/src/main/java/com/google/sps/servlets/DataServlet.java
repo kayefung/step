@@ -35,7 +35,15 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int maxComments = Integer.parseInt(request.getParameter("max-comments"));
+    int maxComments;
+    try {
+        maxComments = Integer.parseInt(request.getParameter("max-comments"));
+    }
+    catch (Exception e) {
+        // Default to displaying 3 comments in case of error.
+        maxComments = 3;
+    }
+    
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

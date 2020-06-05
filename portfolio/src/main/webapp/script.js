@@ -52,15 +52,23 @@ function addRandomFact() {
  * Fetches messages from server and adds it to DOM
  */
 function getComments() {
+  const commentLimit = 15;
+  let maxComments;
   try {
-    var index = document.getElementById('max-comments').selectedIndex;
-    var maxComments = document.getElementsByTagName('option')[index].value;
+    maxComments = document.getElementById('max-comments').value;
+    if (maxComments > commentLimit) {
+        maxComments = commentLimit;
+    }
   }
   catch (e) {
-      var maxComments = 3;
+    // When you initially load page and haven't selected how many comments to
+    // display, default to displaying 3 comments. 
+    maxComments = 3;
   }
 
-  var url = '/data?max-comments=' + maxComments.toString();
+  const baseUrl = window.location.origin;
+  let url = new URL('/data', baseUrl);
+  url.searchParams.append('max-comments', maxComments);
 
   fetch(url) 
   .then(response => response.json())
