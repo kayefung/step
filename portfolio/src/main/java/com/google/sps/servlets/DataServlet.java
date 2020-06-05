@@ -28,7 +28,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content. */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
@@ -58,8 +58,6 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String commentText = request.getParameter("comment-input");
     long timestamp = System.currentTimeMillis();
-
-    // comments.add(commentText);
     
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text", commentText);

@@ -51,8 +51,11 @@ function addRandomFact() {
 /**
  * Fetches messages from server and adds it to DOM
  */
-fetch('/data')
-.then(response => response.json())
-.then((messages) => {
-  document.getElementById('message-container').innerText = messages.join('\n');
-});
+function getComments() {
+  fetch('/data') 
+  .then(response => response.json())
+  .then((messages) => {
+    document.getElementById('message-container').innerText = messages.join('\n');
+  });
+}
+getComments();
