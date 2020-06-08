@@ -54,8 +54,17 @@
       <br>
       
       <form action="/data" method="POST">
-        <input type="text" name="comment-input">
+        <input type="text" name="comment-input" placeholder="Write your comment here!">
         <input type="submit"/>
+        <label>Display:</label>
+        <select name="max-comments" id="max-comments" onchange="getComments()">
+          <option disabled selected value=0>Select</option>
+          <option value=1>1 comment</option>
+          <option value=2>2 comments</option>
+          <option value=3>3 comments</option>
+          <option value=4>4 comments</option>
+          <option value=5>5 comments</option>
+        </select>
         <br>
       </form>
 
