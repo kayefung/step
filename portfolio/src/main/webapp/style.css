@@ -1,13 +1,59 @@
 body {
-  font-family: sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
-h1 {
-  font-size: 2.5em;
+header {
+  display: grid;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0;
+  padding-bottom: 45%;
+  width: 60%;
+  height: 0;
+  background-image: url(/images/header_bg_image.jpeg);
+  background-size: 75% 75%;
+  background-repeat: no-repeat;
+  background-position: 100% 60%;
+  font-family: 'Abril Fatface', cursive;
+}
+
+header h1 {
+  position: relative;
+    right: 77%;
+  margin-bottom: 0.5em;
+  padding-top: 15%;
+  font-size: 5em;
+  text-align: right;
+}
+
+header p {
+  position: relative;
+    right: 77%;
+  margin: 0;
+  padding-bottom: 15%;
+  font-size: 1.75em;
+  text-align: right;
+}
+
+nav {
+  display: block;
+  padding: 2em 0 2em 0;
+}
+
+nav ul {
+  position: relative;
+  float: right;
+  list-style-type: none;
+}
+
+nav li {
+  display: inline;
+  font-size: 1.75em;
 }
 
 h2 {
   font-size: 2em;
+  font-weight: 700;
 }
 
 p, li, button, #fact-container, #message-container {
@@ -41,16 +87,9 @@ a:hover, a:active {
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 50%;
+  width: 40%;
 }
 
 #fact-container {
   margin-top: 20px;
-}
-
-img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
 }
