@@ -39,7 +39,7 @@ public class DataServlet extends HttpServlet {
     try {
         maxComments = Integer.parseInt(request.getParameter("max-comments"));
     }
-    catch (Exception e) {
+    catch (NumberFormatException e) {
         // Default to displaying 3 comments in case of error.
         maxComments = 3;
     }
