@@ -27,6 +27,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
@@ -34,13 +35,23 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    int maxComments;
+    try {
+        maxComments = Integer.parseInt(request.getParameter("max-comments"));
+    }
+    catch (NumberFormatException e) {
+        // Default to displaying 3 comments in case of error.
+        maxComments = 3;
+    }
+    
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
+    FetchOptions fetchOptions = FetchOptions.Builder.withLimit(maxComments);
 
     ArrayList<String> comments = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : results.asIterable(fetchOptions)) {
       String commentText = (String) entity.getProperty("text");
 
       comments.add(commentText);
