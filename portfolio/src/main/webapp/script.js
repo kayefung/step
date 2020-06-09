@@ -73,7 +73,15 @@ function getComments() {
   fetch(url) 
   .then(response => response.json())
   .then((messages) => {
-    document.getElementById('message-container').innerText = messages.join('\n');
+    document.getElementById('message-container').innerHTML = '';
+
+    for (message of messages) {
+      const commentContainer = document.createElement('div');
+      commentContainer.className += 'comment-container';
+      commentContainer.innerText = message;
+
+      document.getElementById('message-container').appendChild(commentContainer);
+    }
   });
 }
 getComments();
