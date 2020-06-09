@@ -55,23 +55,23 @@
           </ul>
       </ul>
       <h2>Comments</h2>
-      <div id="message-container"></div>
+      <label>Display:</label>
+      <select name="max-comments" id="max-comments" onchange="getComments()">
+        <option disabled selected value>Select</option>
+        <option value=1>1 comment</option>
+        <option value=2>2 comments</option>
+        <option value=3>3 comments</option>
+        <option value=4>4 comments</option>
+        <option value=5>5 comments</option>
+      </select>
       <br>
-      
-      <form action="/data" method="POST">
-        <input type="text" name="comment-input" placeholder="Write your comment here!">
-        <input type="submit"/>
-        <label>Display:</label>
-        <select name="max-comments" id="max-comments" onchange="getComments()">
-          <option disabled selected value>Select</option>
-          <option value=1>1 comment</option>
-          <option value=2>2 comments</option>
-          <option value=3>3 comments</option>
-          <option value=4>4 comments</option>
-          <option value=5>5 comments</option>
-        </select>
-        <br>
-      </form>
+      <div id="message-container"></div>
+      <div id="comment-form">
+        <form action="/data" method="POST" id="input-form">
+          <input type="text" name="comment-input" placeholder="Write your comment here!">
+          <input type="submit"/>
+        </form>
+      </div>
 
       <form action="/delete-data" method="POST">
         <button>Delete comments</button>

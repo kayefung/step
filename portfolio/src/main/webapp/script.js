@@ -80,8 +80,38 @@ function getComments() {
       commentContainer.className += 'comment-container';
       commentContainer.innerText = message;
 
-      document.getElementById('message-container').appendChild(commentContainer);
+      document.getElementById('message-container')
+          .appendChild(commentContainer);
     }
   });
 }
 getComments();
+
+/**
+ * Checks login status of user, links to login/logout page, hides comment form
+ * if user is logged out.
+ */
+function checkLoginStatus() {
+  fetch('/login')
+  .then(response => response.json())
+  .then((status) => {
+    const baseUrl = window.location.origin;
+    let url = new URL(status[1], baseUrl);
+
+    let commentForm = document.getElementById('comment-form');
+    let para = document.createElement("p");
+    
+    if (status[0] === "True") {
+      para.innerHTML = "<p>Logout <a href=\"" + url + "\">here</a>.</p>";
+      commentForm.appendChild(para);
+    }
+    else {
+      commentForm.getElementsByTagName('form')[0].style.display = "none";
+      
+      para.innerHTML = "<p>Login <a href=\"" + url +
+          "\">here</a> to comment.</p>";
+      commentForm.appendChild(para);
+    }
+  });
+}
+checkLoginStatus();
