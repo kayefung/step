@@ -76,8 +76,8 @@ function getComments() {
     document.getElementById('message-container').innerHTML = '';
 
     for (message of messages) {
-      let commentContainer = document.createElement('div');
-      commentContainer.id = 'comment-container';
+      const commentContainer = document.createElement('div');
+      commentContainer.className += 'comment-container';
       commentContainer.innerText = message;
 
       document.getElementById('message-container').appendChild(commentContainer);
