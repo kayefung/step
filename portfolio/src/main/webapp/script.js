@@ -88,30 +88,52 @@ function getComments() {
 getComments();
 
 /**
- * Checks login status of user, links to login/logout page, hides comment form
- * if user is logged out.
+ * Fetches login status data from /login and updates comment-form div in DOM
+ *     depending on login status. Depending on status, DOM is updated to hide
+ *     the form and prompt the user to login or out.
  */
-function checkLoginStatus() {
+function updateCommentForm() {
   fetch('/login')
   .then(response => response.json())
   .then((status) => {
-    const baseUrl = window.location.origin;
-    let url = new URL(status[1], baseUrl);
-
     let commentForm = document.getElementById('comment-form');
-    let para = document.createElement("p");
     
-    if (status[0] === "True") {
-      para.innerHTML = "<p>Logout <a href=\"" + url + "\">here</a>.</p>";
+    if (status['isLoggedIn'] === true) {
+      let para = createLoginStatusElement('Logout here.', status['logUrl']);
       commentForm.appendChild(para);
     }
     else {
-      commentForm.getElementsByTagName('form')[0].style.display = "none";
+      document.getElementById('input-form').style.display = 'none';
       
-      para.innerHTML = "<p>Login <a href=\"" + url +
-          "\">here</a> to comment.</p>";
+      let para =
+          createLoginStatusElement('Login here to comment.', status['logUrl']);
       commentForm.appendChild(para);
     }
   });
 }
-checkLoginStatus();
+updateCommentForm();
+
+/**
+ * Creates and returns a paragraph element that wraps 'here' in a String with
+ *     an anchor tag linking to a URL.
+ * @param {string} text A String that prompts user to login or logout.
+ * @param {string} url A String of the URL for the user login/logout page.
+ * @return {!HTMLParagraphElement} Paragraph element with text and anchor
+ *     element that links to url.
+ */
+function createLoginPromptElement(text, url) {
+  // Create anchor element that links to url
+  const anchor = document.createElement('a');
+  anchor.setAttribute('href', url);
+  anchor.text = 'here';
+
+  const para = document.createElement('p');
+  const splitText = text.split('here', 2);
+
+  // Append text nodes and anchor element as children of para
+  para.appendChild(document.createTextNode(splitText[0]));
+  para.appendChild(anchor);
+  para.appendChild(document.createTextNode(splitText[1]));
+
+  return para;
+}

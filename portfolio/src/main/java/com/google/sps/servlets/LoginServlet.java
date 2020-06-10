@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.sps.data.LoginStatus;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -31,25 +32,25 @@ public class LoginServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json;");
 
-    ArrayList<String> loginStatus = new ArrayList<>();
-
-    // Returns login status of user and login/logout URL
     UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
-      loginStatus.add("True");
-      
-      String redirectUrl = "/index.html";
-      String logoutUrl = userService.createLogoutURL(redirectUrl);
-      loginStatus.add(logoutUrl);
-    } else {
-      loginStatus.add("False");
+    
+    boolean isLoggedIn;
+    String redirectUrl = "/index.html";
+    String logUrl;
 
-      String redirectUrl = "/index.html";
-      String loginUrl = userService.createLoginURL(redirectUrl);
-      loginStatus.add(loginUrl);
+    // Assigns values to isLoggedIn and logUrl based on login status.
+    if (userService.isUserLoggedIn()) {
+      isLoggedIn = true;
+      logUrl = userService.createLogoutURL(redirectUrl);
+    }
+    else {
+      isLoggedIn = false;
+      logUrl = userService.createLoginURL(redirectUrl);
     }
 
-    // Convert loginStatus ArrayList to JSON String using GSON library. 
+    LoginStatus loginStatus = new LoginStatus(isLoggedIn, logUrl);
+
+    // Convert loginStatus object to JSON String using GSON library. 
     Gson gson = new Gson();
     String json = gson.toJson(loginStatus);
 
