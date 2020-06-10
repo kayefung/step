@@ -31,6 +31,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.data.Comment;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
@@ -53,16 +54,13 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
     FetchOptions fetchOptions = FetchOptions.Builder.withLimit(maxComments);
 
-    ArrayList<HashMap> comments = new ArrayList<>();
+    ArrayList<Comment> comments = new ArrayList<>();
     
     for (Entity entity : results.asIterable(fetchOptions)) {
-      HashMap<String, String> comment = new HashMap<String, String>();
+      String email = (String) entity.getProperty("email");
+      String text = (String) entity.getProperty("text");
       
-      String userEmail = (String) entity.getProperty("email");
-      String commentText = (String) entity.getProperty("text");
-      
-      comment.put("email", userEmail);
-      comment.put("text", commentText);
+      Comment comment = new Comment(email, text);
 
       comments.add(comment);
     }
