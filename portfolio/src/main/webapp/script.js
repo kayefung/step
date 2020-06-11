@@ -98,15 +98,15 @@ function updateCommentForm() {
   .then((status) => {
     let commentForm = document.getElementById('comment-form');
     
-    if (status['isLoggedIn'] === true) {
-      let para = createLoginStatusElement('Logout here.', status['logUrl']);
+    if (status.isLoggedIn) {
+      // Display a comment form if the user is logged in.
+      commentForm.appendChild(createCommentFormElement());
+      
+      let para = createLoginPromptElement(status.isLoggedIn, status.logUrl);
       commentForm.appendChild(para);
     }
     else {
-      document.getElementById('input-form').style.display = 'none';
-      
-      let para =
-          createLoginStatusElement('Login here to comment.', status['logUrl']);
+      let para = createLoginPromptElement(status.isLoggedIn, status.logUrl);
       commentForm.appendChild(para);
     }
   });
@@ -114,26 +114,57 @@ function updateCommentForm() {
 updateCommentForm();
 
 /**
- * Creates and returns a paragraph element that wraps 'here' in a String with
- *     an anchor tag linking to a URL.
- * @param {string} text A String that prompts user to login or logout.
- * @param {string} url A String of the URL for the user login/logout page.
+ * Creates and returns a paragraph element that prompts the user to login/out
+ *     and links to a URL.
+ * @param {boolean} isLoggedIn A boolean that indicates whether the user is
+ *     logged in or not.
+ * @param {string} url A string of the URL for the user login/logout page.
  * @return {!HTMLParagraphElement} Paragraph element with text and anchor
  *     element that links to url.
  */
-function createLoginPromptElement(text, url) {
+function createLoginPromptElement(isLoggedIn, url) {
   // Create anchor element that links to url
   const anchor = document.createElement('a');
   anchor.setAttribute('href', url);
   anchor.text = 'here';
 
   const para = document.createElement('p');
-  const splitText = text.split('here', 2);
 
   // Append text nodes and anchor element as children of para
-  para.appendChild(document.createTextNode(splitText[0]));
-  para.appendChild(anchor);
-  para.appendChild(document.createTextNode(splitText[1]));
+  if (isLoggedIn) {
+    para.appendChild(document.createTextNode('Logout '));
+    para.appendChild(anchor);
+    para.appendChild(document.createTextNode('.'));
+  }
+  else {
+    para.appendChild(document.createTextNode('Login '));
+    para.appendChild(anchor);
+    para.appendChild(document.createTextNode(' to comment.'));
+  }
 
   return para;
+}
+
+/**
+ * Creates and returns a form element for users to submit comments.
+ * @return {!HTMLFormElement} Form element with a text field and submit button
+ */
+function createCommentFormElement() {
+  const form = document.createElement('form');
+  form.setAttribute('action', '/data');
+  form.setAttribute('method', 'POST');
+  form.setAttribute('id', 'input-form');
+
+  const textField = document.createElement('input');
+  textField.setAttribute('type', 'text');
+  textField.setAttribute('name', 'comment-input');
+  textField.setAttribute('placeholder', 'Write your comment here!');
+
+  const submitButton = document.createElement('input');
+  submitButton.setAttribute('type', 'submit');
+
+  form.appendChild(textField);
+  form.appendChild(submitButton);
+
+  return form;
 }
