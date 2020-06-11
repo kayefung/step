@@ -53,6 +53,7 @@ function addRandomFact() {
  */
 function getComments() {
   const commentLimit = 15;
+
   let maxComments;
   try {
     maxComments = document.getElementById('max-comments').value;
@@ -78,7 +79,7 @@ function getComments() {
     for (message of messages) {
       const commentContainer = document.createElement('div');
       commentContainer.className += 'comment-container';
-      commentContainer.innerText = message;
+      commentContainer.innerText = message.email + ': ' + message.text;
 
       document.getElementById('message-container')
           .appendChild(commentContainer);
