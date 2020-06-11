@@ -46,15 +46,10 @@ public class LoginServlet extends HttpServlet {
   public LoginStatus getLoginStatus() {
     UserService userService = UserServiceFactory.getUserService();
 
-    String logUrl;
-
     // Assigns values to isLoggedIn and logUrl based on login status.
-    if (userService.isUserLoggedIn()) {
-      logUrl = userService.createLogoutURL(redirectUrl);
-    }
-    else {
-      logUrl = userService.createLoginURL(redirectUrl);
-    }
+    String logUrl = userService.isUserLoggedIn() 
+    ? userService.createLogoutURL(redirectUrl) 
+    : userService.createLoginURL(redirectUrl);
 
     // Create a new LoginStatus object and return it.
     return new LoginStatus(userService.isUserLoggedIn(), logUrl);
