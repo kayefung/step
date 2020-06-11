@@ -28,6 +28,8 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 /** Servlet that returns some example content. */
 @WebServlet("/data")
@@ -67,15 +69,20 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String commentText = request.getParameter("comment-input");
-    long timestamp = System.currentTimeMillis();
+    UserService userService = UserServiceFactory.getUserService();
     
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("text", commentText);
-    commentEntity.setProperty("timestamp", timestamp);
+    // Only stores comment if user is logged in. 
+    if (userService.isUserLoggedIn()) {
+      String commentText = request.getParameter("comment-input");
+      long timestamp = System.currentTimeMillis();
+      
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("text", commentText);
+      commentEntity.setProperty("timestamp", timestamp);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+    }
 
     // Redirect back to the homepage.
     response.sendRedirect("/index.html");
