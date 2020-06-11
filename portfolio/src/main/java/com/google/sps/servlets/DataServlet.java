@@ -59,10 +59,8 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable(fetchOptions)) {
       String email = (String) entity.getProperty("email");
       String text = (String) entity.getProperty("text");
-      
-      Comment comment = new Comment(email, text);
 
-      comments.add(comment);
+      comments.add(new Comment(email, text));
     }
 
     // Convert comments ArrayList to JSON String using GSON library. 
@@ -77,17 +75,20 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
 
-    String commentText = request.getParameter("comment-input");
-    long timestamp = System.currentTimeMillis();
-    String email = userService.getCurrentUser().getEmail();
-    
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("text", commentText);
-    commentEntity.setProperty("timestamp", timestamp);
-    commentEntity.setProperty("email", email);
+    // Only stores comment if user is logged in. 
+    if (userService.isUserLoggedIn()) {
+      String commentText = request.getParameter("comment-input");
+      long timestamp = System.currentTimeMillis();
+      String email = userService.getCurrentUser().getEmail();
+      
+      Entity commentEntity = new Entity("Comment");
+      commentEntity.setProperty("text", commentText);
+      commentEntity.setProperty("timestamp", timestamp);
+      commentEntity.setProperty("email", email);
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(commentEntity);
+      DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+      datastore.put(commentEntity);
+    }
 
     // Redirect back to the homepage.
     response.sendRedirect("/index.html");

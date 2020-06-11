@@ -23,36 +23,35 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.sps.data.LoginStatus;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+
+  private String redirectUrl = "/index.html";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json;");
 
-    ArrayList<String> loginStatus = new ArrayList<>();
+    LoginStatus loginStatus = getLoginStatus();
 
-    // Returns login status of user and login/logout URL
-    UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
-      loginStatus.add("True");
-      
-      String redirectUrl = "/index.html";
-      String logoutUrl = userService.createLogoutURL(redirectUrl);
-      loginStatus.add(logoutUrl);
-    } else {
-      loginStatus.add("False");
-
-      String redirectUrl = "/index.html";
-      String loginUrl = userService.createLoginURL(redirectUrl);
-      loginStatus.add(loginUrl);
-    }
-
-    // Convert loginStatus ArrayList to JSON String using GSON library. 
+    // Convert loginStatus object to JSON String using GSON library. 
     Gson gson = new Gson();
     String json = gson.toJson(loginStatus);
 
     response.getWriter().println(json);
+  }
+
+  public LoginStatus getLoginStatus() {
+    UserService userService = UserServiceFactory.getUserService();
+
+    // Assigns values to isLoggedIn and logUrl based on login status.
+    String logUrl = userService.isUserLoggedIn() 
+    ? userService.createLogoutURL(redirectUrl) 
+    : userService.createLoginURL(redirectUrl);
+
+    // Create a new LoginStatus object and return it.
+    return new LoginStatus(userService.isUserLoggedIn(), logUrl);
   }
 }
