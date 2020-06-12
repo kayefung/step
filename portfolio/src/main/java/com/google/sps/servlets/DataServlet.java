@@ -61,7 +61,6 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable(fetchOptions)) {
       String email = (String) entity.getProperty("email");
       String text = (String) entity.getProperty("text");
-      float score = calculateSentimentScore(text);
 
       comments.add(new Comment(email, text));
     }
