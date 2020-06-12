@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-import java.util.HashMap;
 import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
@@ -103,7 +102,7 @@ public class DataServlet extends HttpServlet {
   /**
    * Calculates sentiment score of a comment's text and returns the score as a float. 
    */
-  public float calculateSentimentScore(String text) throws IOException {
+  private float calculateSentimentScore(String text) throws IOException {
     Document doc =
         Document.newBuilder().setContent(text).setType(Document.Type.PLAIN_TEXT).build();
     LanguageServiceClient languageService = LanguageServiceClient.create();
