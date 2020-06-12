@@ -79,7 +79,14 @@ function getComments() {
     for (message of messages) {
       const commentContainer = document.createElement('div');
       commentContainer.className += 'comment-container';
-      commentContainer.innerText = message.email + ': ' + message.text;
+
+      const commentPara = document.createElement('p');
+      commentPara.innerText = message.email + ': ' + message.text;
+      commentContainer.appendChild(commentPara);
+
+      const sentimentPara = document.createElement('p');
+      sentimentPara.innerText = 'Vibe: ' + message.score.toFixed(2);
+      commentContainer.appendChild(sentimentPara);
 
       document.getElementById('message-container')
           .appendChild(commentContainer);
