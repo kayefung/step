@@ -19,9 +19,11 @@ public class Comment {
 
   private final String text;
   private final String email;
+  private final float score;
 
-  public Comment(String email, String text) {
+  public Comment(String email, String text, float score) {
     this.email = email;
     this.text = text;
+    this.score = score;
   }
 }
