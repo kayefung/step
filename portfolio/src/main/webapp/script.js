@@ -85,6 +85,7 @@ function getComments() {
       commentContainer.appendChild(commentPara);
 
       const sentimentPara = document.createElement('p');
+      sentimentPara.className += 'sentiment';
       sentimentPara.innerText = 'Vibe: ' + message.score.toFixed(2);
       commentContainer.appendChild(sentimentPara);
 
