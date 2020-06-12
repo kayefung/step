@@ -88,7 +88,6 @@ public class DataServlet extends HttpServlet {
       commentEntity.setProperty("text", commentText);
       commentEntity.setProperty("timestamp", timestamp);
       commentEntity.setProperty("email", email);
-      float score = calculateSentimentScore(text);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
       datastore.put(commentEntity);
