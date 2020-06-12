@@ -61,7 +61,7 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable(fetchOptions)) {
       String email = (String) entity.getProperty("email");
       String text = (String) entity.getProperty("text");
-      float score = Float.parseFloat(entity.getProperty("score"));
+      float score = (float) entity.getProperty("score");
 
       comments.add(new Comment(email, text, score));
     }
@@ -83,7 +83,7 @@ public class DataServlet extends HttpServlet {
       String commentText = request.getParameter("comment-input");
       long timestamp = System.currentTimeMillis();
       String email = userService.getCurrentUser().getEmail();
-      float score = calculateSentimentScore(text);
+      float score = calculateSentimentScore(commentText);
       
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", commentText);
