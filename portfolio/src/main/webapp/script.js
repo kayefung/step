@@ -78,7 +78,7 @@ function getComments() {
 
     for (message of messages) {
       const commentContainer =
-          createCommentContainer(message.email, message.text, message.score);
+          createCommentContainer(message.nickname, message.text, message.score);
 
       document.getElementById('message-container')
           .appendChild(commentContainer);
@@ -147,7 +147,7 @@ function createLoginPromptElement(isLoggedIn, url) {
 
 /**
  * Creates and returns a form element for users to submit comments.
- * @return {!HTMLFormElement} Form element with a text field and submit button
+ * @return {!HTMLFormElement} Form element with text fields and submit button.
  */
 function createCommentFormElement() {
   const form = document.createElement('form');
@@ -155,15 +155,35 @@ function createCommentFormElement() {
   form.setAttribute('method', 'POST');
   form.setAttribute('id', 'input-form');
 
-  const textField = document.createElement('input');
-  textField.setAttribute('type', 'text');
-  textField.setAttribute('name', 'comment-input');
-  textField.setAttribute('placeholder', 'Write your comment here!');
+  const nameLabel = document.createElement('label');
+  nameLabel.setAttribute('for', 'nickname-input');
+  nameLabel.appendChild(document.createTextNode('Name*'))
+
+  const nameField = document.createElement('input');
+  nameField.required = true;
+  nameField.setAttribute('type', 'text');
+  nameField.setAttribute('name', 'nickname-input');
+  nameField.setAttribute('id', 'nickname-input');
+  nameField.setAttribute('placeholder', 'Enter a display name.');
+
+  const commentLabel = document.createElement('label');
+  commentLabel.setAttribute('for', 'comment-input');
+  commentLabel.appendChild(document.createTextNode('Comment*'))
+
+  const commentField = document.createElement('input');
+  commentField.required = true;
+  commentField.setAttribute('type', 'text');
+  commentField.setAttribute('name', 'comment-input');
+  commentField.setAttribute('id', 'comment-input');
+  commentField.setAttribute('placeholder', 'Write your comment here!');
 
   const submitButton = document.createElement('input');
   submitButton.setAttribute('type', 'submit');
 
-  form.appendChild(textField);
+  form.appendChild(nameLabel);
+  form.appendChild(nameField);
+  form.appendChild(commentLabel);
+  form.appendChild(commentField);
   form.appendChild(submitButton);
 
   return form;
@@ -171,19 +191,19 @@ function createCommentFormElement() {
 
 /**
  * Creates and returns a div element for a single comment.
- * @param {string} email A string of the commenter's email address. 
+ * @param {string} name A string of the commenter's display name.
  * @param {string} text A string of comment input. 
  * @param {double} score A double of the comment's sentiment score. 
  * @return {!HTMLDivElement} Div element that displays comment data. 
  */
-function createCommentContainer(email, text, score) {
+function createCommentContainer(name, text, score) {
   // Create div that contains a comment's information.
   const commentContainer = document.createElement('div');
   commentContainer.className += 'comment-container';
 
-  // Paragraph element that displays user email and comment.
+  // Paragraph element that displays user's name and comment.
   const commentPara = document.createElement('p');
-  commentPara.innerText = email + ': ' + text;
+  commentPara.innerText = name + ': ' + text;
   commentContainer.appendChild(commentPara);
 
   // Paragraph element that displays sentiment score. 

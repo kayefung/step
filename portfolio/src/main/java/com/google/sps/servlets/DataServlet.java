@@ -59,11 +59,11 @@ public class DataServlet extends HttpServlet {
     ArrayList<Comment> comments = new ArrayList<>();
     
     for (Entity entity : results.asIterable(fetchOptions)) {
-      String email = (String) entity.getProperty("email");
+      String nickname = (String) entity.getProperty("nickname");
       String text = (String) entity.getProperty("text");
       Double score = (double) entity.getProperty("score");
 
-      comments.add(new Comment(email, text, score));
+      comments.add(new Comment(nickname, text, score));
     }
 
     // Convert comments ArrayList to JSON String using GSON library. 
@@ -83,12 +83,14 @@ public class DataServlet extends HttpServlet {
       String commentText = request.getParameter("comment-input");
       long timestamp = System.currentTimeMillis();
       String email = userService.getCurrentUser().getEmail();
+      String nickname = request.getParameter("nickname-input");
       float score = calculateSentimentScore(commentText);
       
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", commentText);
       commentEntity.setProperty("timestamp", timestamp);
       commentEntity.setProperty("email", email);
+      commentEntity.setProperty("nickname", nickname);
       commentEntity.setProperty("score", score);
 
       DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
