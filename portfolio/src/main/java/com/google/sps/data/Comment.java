@@ -17,12 +17,12 @@ package com.google.sps.data;
 /** User comment and the email address the comment was written by. */
 public class Comment {
 
+  private final String nickname;
   private final String text;
-  private final String email;
   private final Double score;
 
-  public Comment(String email, String text, Double score) {
-    this.email = email;
+  public Comment(String nickname, String text, Double score) {
+    this.nickname = nickname;
     this.text = text;
     this.score = score;
   }
