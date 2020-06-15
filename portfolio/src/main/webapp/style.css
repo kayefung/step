@@ -94,6 +94,12 @@ a:hover, a:active {
   margin-top: 20px;
 }
 
+#comment-form form {
+  display: grid;
+  grid-template-columns: 80px 300px;
+  grid-gap: 10px;
+}
+
 .comment-container {
   margin: 15px 0px 15px 0px;
   padding-left: 15px;
