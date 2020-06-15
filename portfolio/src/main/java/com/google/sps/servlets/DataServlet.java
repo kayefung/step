@@ -84,7 +84,7 @@ public class DataServlet extends HttpServlet {
       long timestamp = System.currentTimeMillis();
       String email = userService.getCurrentUser().getEmail();
       String nickname = request.getParameter("nickname-input");
-      float score = 0.2f;//calculateSentimentScore(commentText);
+      float score = calculateSentimentScore(commentText);
       
       Entity commentEntity = new Entity("Comment");
       commentEntity.setProperty("text", commentText);
