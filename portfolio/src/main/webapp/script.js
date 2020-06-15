@@ -77,9 +77,8 @@ function getComments() {
     document.getElementById('message-container').innerHTML = '';
 
     for (message of messages) {
-      const commentContainer = document.createElement('div');
-      commentContainer.className += 'comment-container';
-      commentContainer.innerText = message.email + ': ' + message.text;
+      const commentContainer =
+          createCommentContainer(message.email, message.text, message.score);
 
       document.getElementById('message-container')
           .appendChild(commentContainer);
@@ -168,4 +167,30 @@ function createCommentFormElement() {
   form.appendChild(submitButton);
 
   return form;
+}
+
+/**
+ * Creates and returns a div element for a single comment.
+ * @param {string} email A string of the commenter's email address. 
+ * @param {string} text A string of comment input. 
+ * @param {double} score A double of the comment's sentiment score. 
+ * @return {!HTMLDivElement} Div element that displays comment data. 
+ */
+function createCommentContainer(email, text, score) {
+  // Create div that contains a comment's information.
+  const commentContainer = document.createElement('div');
+  commentContainer.className += 'comment-container';
+
+  // Paragraph element that displays user email and comment.
+  const commentPara = document.createElement('p');
+  commentPara.innerText = email + ': ' + text;
+  commentContainer.appendChild(commentPara);
+
+  // Paragraph element that displays sentiment score. 
+  const sentimentPara = document.createElement('p');
+  sentimentPara.className += 'sentiment';
+  sentimentPara.innerText = 'Vibe: ' + score.toFixed(2);
+  commentContainer.appendChild(sentimentPara);
+
+  return commentContainer;
 }

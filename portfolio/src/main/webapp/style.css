@@ -93,3 +93,18 @@ a:hover, a:active {
 #fact-container {
   margin-top: 20px;
 }
+
+.comment-container {
+  margin: 15px 0px 15px 0px;
+  padding-left: 15px;
+  border-style: solid;
+  border-radius: 15px;
+  border-color: rgba(166, 166, 166, 0.7);
+  background: rgba(166, 166, 166, 0.5);
+  font-size: 13px;
+  line-height: 0.5em;
+}
+
+.sentiment {
+  font-size: 1em;
+}
