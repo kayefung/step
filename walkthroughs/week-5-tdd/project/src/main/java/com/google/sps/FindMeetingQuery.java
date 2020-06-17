@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import com.google.sps.Event;
 import com.google.sps.MeetingRequest;
 import com.google.sps.TimeRange;
@@ -29,13 +30,21 @@ public final class FindMeetingQuery {
       return Arrays.asList();
     }
 
+    ArrayList<Event> sortedEvents = new ArrayList<>(events);
+
+    Collections.sort(sortedEvents, new Comparator<Event>() {
+      public int compare(Event a, Event b) {
+        return ((Integer) a.getWhen().start()).compareTo((Integer) b.getWhen().start());
+      }
+    });
+
     Collection<TimeRange> times = new ArrayList<>();
 
     // Start and end markers of a time range that is available for a meeting. 
     int start = TimeRange.START_OF_DAY;
     int end = TimeRange.START_OF_DAY;
 
-    for (Event event : events) {
+    for (Event event : sortedEvents) {
 
       // Do not use event to determine time range options if none of the event attendees will be
       // attending the requested meeting. 
@@ -63,7 +72,6 @@ public final class FindMeetingQuery {
       // Moves marker to set the start of the next available time range. 
       if (start < eventTime.end()) {
         start = eventTime.end();
-        end = eventTime.end();
       }
     }
 
