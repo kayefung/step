@@ -30,7 +30,11 @@ public final class FindMeetingQuery {
       return Arrays.asList();
     }
 
-    ArrayList<TimeRange> times = new ArrayList<>(Arrays.asList(TimeRange.WHOLE_DAY));
+    ArrayList<TimeRange> times = new ArrayList<>();
+
+    // Start and end markers of a time range that is available for a meeting. 
+    int start = TimeRange.START_OF_DAY;
+    int end = TimeRange.START_OF_DAY;
 
     for (Event event : events) {
 
@@ -40,30 +44,34 @@ public final class FindMeetingQuery {
         continue;
       }
 
-      ListIterator<TimeRange> timesIterator = times.listIterator();
+      TimeRange eventTime = event.getWhen();
 
-      while (timesIterator.hasNext()) {
-        TimeRange time = timesIterator.next();
-
-        if (time.contains(event.getWhen()) || time.overlaps(event.getWhen())) {
-          // Remove time because event runs through it.
-          timesIterator.remove();
-          
-          // Split time into two time ranges, one before the event and after the event.
-          TimeRange beforeEvent = 
-              TimeRange.fromStartEnd(time.start(), event.getWhen().start(), false);
-          TimeRange afterEvent =
-              TimeRange.fromStartEnd(event.getWhen().end(), time.end(), false);
-          
-          // Only add new ranges if the meeting requested can occur in that time range.
-          if (beforeEvent.duration() >= request.getDuration()) {
-            timesIterator.add(beforeEvent);
-          }
-          if (afterEvent.duration() >= request.getDuration()) {
-            timesIterator.add(afterEvent);
-          }
-        }
+      // "Skips" over events that start at the same time and places start marker at end of event.
+      if (start == eventTime.start()) {
+        start = eventTime.end();
+        continue;
       }
+
+      end = eventTime.start();
+      
+      TimeRange time = TimeRange.fromStartEnd(start, end, false);
+
+      // Only add time range if it's long enough to host the meeting.
+      if (time.duration() >= request.getDuration()) {
+        times.add(time);
+      }
+
+      // Moves marker to set the start of the next available time range. 
+      if (start < eventTime.end()) {
+        start = eventTime.end();
+        end = eventTime.end();
+      }
+    }
+
+    // Add the last time range between the end of the last event and the end of the day.
+    TimeRange time = TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true);
+    if (time.duration() >= request.getDuration()) {
+      times.add(time);
     }
 
     return times;
