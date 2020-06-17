@@ -17,7 +17,6 @@ package com.google.sps;
 import java.util.Collection;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.ListIterator;
 import java.util.Collections;
 import com.google.sps.Event;
 import com.google.sps.MeetingRequest;
@@ -30,7 +29,7 @@ public final class FindMeetingQuery {
       return Arrays.asList();
     }
 
-    ArrayList<TimeRange> times = new ArrayList<>();
+    Collection<TimeRange> times = new ArrayList<>();
 
     // Start and end markers of a time range that is available for a meeting. 
     int start = TimeRange.START_OF_DAY;
