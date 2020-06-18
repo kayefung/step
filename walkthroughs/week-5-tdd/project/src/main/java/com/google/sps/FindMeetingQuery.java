@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.ListIterator;
 import com.google.sps.Event;
 import com.google.sps.MeetingRequest;
 import com.google.sps.TimeRange;
@@ -40,19 +41,71 @@ public final class FindMeetingQuery {
     ArrayList<Event> sortedEvents = new ArrayList<>(events);
     Collections.sort(sortedEvents, Event.ORDER_BY_START);
 
+    Collection<Event> optionalEvents = new ArrayList<>();
+
+    ListIterator<Event> eventsIterator = sortedEvents.listIterator();
+    while (eventsIterator.hasNext()) {
+      Event event = eventsIterator.next();
+      
+      // Separates mandatory attendee events and optional attendee events into two lists and
+      // removes events that are attended by people not invited to the meeting. 
+      if (Collections.disjoint(event.getAttendees(), request.getAttendees())) {
+        // Events with only optional attendees are added to optionalEvents. 
+        if (!Collections.disjoint(event.getAttendees(), request.getOptionalAttendees())) {
+          optionalEvents.add(event);
+        }
+        // Events that don't have any mandatory attendees are removed from sortedEvents.
+        eventsIterator.remove();
+      }
+    }
+
+    Collection<TimeRange> mandatoryTimes = findAvailableTimes(sortedEvents, request);
+    Collection<TimeRange> optionalTimes = findAvailableTimes(optionalEvents, request);
+
+    // If there's no mandatory attendees, only consider optional attendees.
+    if (sortedEvents.size() == 0) {
+      return optionalTimes;
+    }
+
+    Collection<TimeRange> times = new ArrayList<>();
+
+    // Find common available times between mandatory and optional attendees. 
+    for (TimeRange mandatoryTime : mandatoryTimes) {
+      for (TimeRange optionalTime : optionalTimes) {
+        if (mandatoryTime.contains(optionalTime)) {
+          times.add(optionalTime);
+        }
+        else if (optionalTime.contains(mandatoryTime)) {
+          times.add(mandatoryTime);
+        }
+        else if (mandatoryTime.overlaps(optionalTime)) {
+          int start = mandatoryTime.start() > optionalTime.start() ? mandatoryTime.start() : optionalTime.start();
+          int end = mandatoryTime.end() < optionalTime.end() ? mandatoryTime.end() : optionalTime.end();
+
+          TimeRange time = TimeRange.fromStartEnd(start, end, false);
+          if (time.duration() >= request.getDuration()) {
+            times.add(time);
+          }
+        }
+      }
+    }
+
+    // Return time slots where both mandatory and optional attendees are available, if any.
+    if (times.size() > 0) {
+      return times;
+    }
+
+    return mandatoryTimes;
+  }
+
+  public Collection<TimeRange> findAvailableTimes(Collection<Event> events, MeetingRequest request) {
     Collection<TimeRange> times = new ArrayList<>();
 
     // Start and end markers of a time range that is available for a meeting. 
     int start = TimeRange.START_OF_DAY;
     int end = TimeRange.START_OF_DAY;
 
-    for (Event event : sortedEvents) {
-
-      // Do not use event to determine time range options if none of the event attendees will be
-      // attending the requested meeting. 
-      if (Collections.disjoint(event.getAttendees(), request.getAttendees())) {
-        continue;
-      }
+    for (Event event : events) {
 
       TimeRange eventTime = event.getWhen();
 
