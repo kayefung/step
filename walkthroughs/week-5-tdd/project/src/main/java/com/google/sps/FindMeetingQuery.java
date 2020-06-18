@@ -74,13 +74,11 @@ public final class FindMeetingQuery {
       for (TimeRange optionalTime : optionalTimes) {
         if (mandatoryTime.contains(optionalTime)) {
           times.add(optionalTime);
-        }
-        else if (optionalTime.contains(mandatoryTime)) {
+        } else if (optionalTime.contains(mandatoryTime)) {
           times.add(mandatoryTime);
-        }
-        else if (mandatoryTime.overlaps(optionalTime)) {
-          int start = mandatoryTime.start() > optionalTime.start() ? mandatoryTime.start() : optionalTime.start();
-          int end = mandatoryTime.end() < optionalTime.end() ? mandatoryTime.end() : optionalTime.end();
+        } else if (mandatoryTime.overlaps(optionalTime)) {
+          int start = Math.max(mandatoryTime.start(), optionalTime.start());
+          int end = Math.min(mandatoryTime.end(), optionalTime.end());
 
           TimeRange time = TimeRange.fromStartEnd(start, end, false);
           if (time.duration() >= request.getDuration()) {
