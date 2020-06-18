@@ -24,6 +24,13 @@ import com.google.sps.MeetingRequest;
 import com.google.sps.TimeRange;
 
 public final class FindMeetingQuery {
+
+  /**
+   * Returns a Collection of TimeRange objects that represent a time range where a requested
+   * meeting can be held. Start and end markers for an available time range are moved to times
+   * where a conflicting event is not taking place. Only ranges that are long enough to host the
+   * requested meeting are added to the Collection to be returned. 
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     // Do not provide any time options if the meeting requested is longer than a whole day. 
     if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
@@ -31,12 +38,7 @@ public final class FindMeetingQuery {
     }
 
     ArrayList<Event> sortedEvents = new ArrayList<>(events);
-
-    Collections.sort(sortedEvents, new Comparator<Event>() {
-      public int compare(Event a, Event b) {
-        return ((Integer) a.getWhen().start()).compareTo((Integer) b.getWhen().start());
-      }
-    });
+    Collections.sort(sortedEvents, Event.ORDER_BY_START);
 
     Collection<TimeRange> times = new ArrayList<>();
 
