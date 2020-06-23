@@ -24,10 +24,8 @@ import com.google.sps.TimeRange;
 
 public final class FindMeetingQuery {
 
-  private long duration;
-
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    duration = request.getDuration();
+    long duration = request.getDuration();
     
     // Do not provide any time options if the meeting requested is longer than a whole day. 
     if (duration > TimeRange.WHOLE_DAY.duration()) {
@@ -45,20 +43,37 @@ public final class FindMeetingQuery {
     
     // If there's no mandatory attendees, only consider optional attendees.
     if (mandatoryEvents.isEmpty()) {
-      return findAvailableTimes(optionalEvents);
+      return findAvailableTimes(optionalEvents, duration);
     }
 
-    Collection<TimeRange> mandatoryTimes = findAvailableTimes(mandatoryEvents);
-    Collection<TimeRange> optionalTimes = findAvailableTimes(optionalEvents);
+    Collection<TimeRange> mandatoryTimes = findAvailableTimes(mandatoryEvents, duration);
+    Collection<TimeRange> optionalTimes = findAvailableTimes(optionalEvents, duration);
 
-    return findOverlappingTimes(mandatoryTimes, optionalTimes);
+    Collection<TimeRange> overlappingTimes =
+        findOverlappingTimes(mandatoryTimes, optionalTimes, duration);
+
+    ArrayList<TimeRange> toRemove = new ArrayList<>();
+    for (TimeRange time : overlappingTimes) {
+      if (time.duration() < duration) {
+        toRemove.add(time);
+      }
+    }
+    overlappingTimes.removeAll(toRemove);
+
+    // Return time slots where both mandatory and optional attendees are available, if any.
+    if (!overlappingTimes.isEmpty()) {
+      return overlappingTimes;
+    }
+
+    return mandatoryTimes;
   }
 
   /**
    * Return a list of events where the event's attendees share at least one person with the
    * attendee list.
    */
-  private ArrayList<Event> findEventsByAttendees(Collection<Event> events, Collection<String> attendees) {
+  private ArrayList<Event> findEventsByAttendees(Collection<Event> events,
+      Collection<String> attendees) {
     ArrayList<Event> attendeeEvents = new ArrayList<>();
 
     for (Event event : events) {
@@ -76,7 +91,7 @@ public final class FindMeetingQuery {
    * where a conflicting event is not taking place. Only ranges that are long enough to host the
    * requested meeting are added to the Collection to be returned. 
    */
-  private Collection<TimeRange> findAvailableTimes(Collection<Event> events) {
+  private Collection<TimeRange> findAvailableTimes(Collection<Event> events, long duration) {
     Collection<TimeRange> times = new ArrayList<>();
 
     // Start and end markers of a time range that is available for a meeting. 
@@ -122,7 +137,8 @@ public final class FindMeetingQuery {
    * and optional attendees can attend a requested meeting. If there are no overlapping times, then
    * only mandatory attendee times are returned. 
    */
-  private Collection<TimeRange> findOverlappingTimes(Collection<TimeRange> mandatoryTimes, Collection<TimeRange> optionalTimes) {
+  public static Collection<TimeRange> findOverlappingTimes(Collection<TimeRange> mandatoryTimes,
+      Collection<TimeRange> optionalTimes, long duration) {
     Collection<TimeRange> times = new ArrayList<>();
     
     // Find common available times between mandatory and optional attendees. 
@@ -137,19 +153,11 @@ public final class FindMeetingQuery {
           int start = Math.max(mandatoryTime.start(), optionalTime.start());
           int end = Math.min(mandatoryTime.end(), optionalTime.end());
 
-          TimeRange time = TimeRange.fromStartEnd(start, end, false);
-          if (time.duration() >= duration) {
-            times.add(time);
-          }
+          times.add(TimeRange.fromStartEnd(start, end, false));
         }
       }
     }
 
-    // Return time slots where both mandatory and optional attendees are available, if any.
-    if (times.size() > 0) {
-      return times;
-    }
-
-    return mandatoryTimes;
+    return times;
   }
 }
